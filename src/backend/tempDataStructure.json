@@ -1,0 +1,79 @@
+{
+  "accounts": {
+    "bills": {
+      "water": {
+        "code": "GFX-431",
+        "members": {
+          "userName1": true,
+          "userName2": false,
+          "userName3": false
+        },
+        "notifications": {
+          "notification1": "",
+          "notification2": ""
+        }
+      },
+      "electric": {
+        "code": "GFX-434",
+        "members": {
+          "userName1": true,
+          "userName2": true,
+          "userName3": false
+        }
+      }
+    },
+    "Dung": {
+      "bills": {
+        "water": {
+          "code": "GSS-131",
+          "members": {
+            "userName1": true,
+            "userName2": true,
+            "userName3": false
+          }
+        }
+      }
+    }
+  },
+
+  "users": {
+    "name": "Alex",
+    "email": "",
+    "phone": "",
+    "payments": {
+      "paypal": "",
+      "Vennmo": ""
+    }
+  },
+
+  "bills": {
+    "water": {
+      "provider": "Gwinnett-water"
+    },
+    "electric": {
+      "provider": "Georgia-Power"
+    }
+  },
+
+  "providers": {
+    "Gwinnett-water": {
+      "address": "",
+      "account": ""
+    },
+    "Georgia-Power": {
+      "address": "",
+      "account": ""
+    }
+  },
+
+  "notifications": {
+    "name1": {
+      "type": "",
+      "message": ""
+    },
+    "name2": {
+      "type": "",
+      "message": ""
+    }
+  }
+}
