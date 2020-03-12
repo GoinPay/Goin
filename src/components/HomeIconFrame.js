@@ -71,7 +71,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     // paddingLeft: "5.3%",
-    marginBottom: "3%"
+    //marginBottom: "3%"
+    paddingBottom: "7%",
     //marginTop: 4,
     // marginBottom: 10
     // backgroundColor: "gray"
@@ -81,11 +82,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     // fontFamily: 'Roboto',
     fontWeight: "bold",
-    marginBottom: "1.5%"
+    marginBottom: "1.5%",
+
   },
   subTitle: {
     color: "#fff",
-    fontSize: 13
+    fontSize: 13,
   },
   subTitleArea: {
     height: 57,
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
   amountText: {
     fontSize: 35,
     color: "white",
-    fontFamily: "serif"
+    // fontFamily: "serif"
   }
 });
 

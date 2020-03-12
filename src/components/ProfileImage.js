@@ -1,9 +1,14 @@
 import React from "react";
-import { View, Image } from "react-native";
+import { View, Image, Text } from "react-native";
 const blankImage = require("../../assets/blank.png");
 
 const ProfileImage = props => {
   let showProfile = true;
+  let memberInitial = "";
+
+  if (props.name)
+    memberInitial = props.name.charAt(0).toUpperCase();
+
   if (typeof props.isShowProfile != "undefined") {
     showProfile = props.isShowProfile;
   }
@@ -18,7 +23,11 @@ const ProfileImage = props => {
           display: showProfile | props.isPrimary ? "flex" : "none"
         }}
         source={props.image ? props.image : blankImage}
+
       />
+      {props.image ? null :
+        (<Text style={{ fontSize: 28, position: "absolute", left: 9, top: 0 }}>{memberInitial}</Text>)
+      }
       <Image
         style={{
           width: 15,

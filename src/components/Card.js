@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,7 +8,22 @@ import {
   TextInput
 } from "react-native";
 
-const Card = () => {
+import backend from "../backend/BackendAPIs";
+
+const Card = (props) => {
+  let members = props.payload.members;
+  let db = backend.db;
+  let email = db.removeEmailDots('alexander.bronola@gmail.com');
+  let yourDue = 0;
+
+  //console.log('card: ' + JSON.stringify(members[email]));
+  if (members && members[email]) {
+    yourDue = members[email].yourDue;
+    if (!yourDue) yourDue = 0;
+  }
+
+  //console.log('yourDue: ' + yourDue);
+
   return (
     <View style={styles.card}>
       <View style={styles.container}>
@@ -24,7 +39,8 @@ const Card = () => {
           </View>
           <View style={styles.descriptionArea}>
             <TextInput
-              placeholder='Unnamed               '
+              placeholder={props.payload.description}
+              value={props.payload.description}
               style={styles.descriptionInput}
             ></TextInput>
           </View>
@@ -32,10 +48,10 @@ const Card = () => {
         <View style={styles.dueAreaRow}>
           <View style={styles.dueArea}>
             <View style={styles.totalRow}>
-              <Text style={{ color: "white" }}>Total: $1800.00</Text>
+              <Text style={{ color: "white" }}>Total: {props.payload.total}</Text>
             </View>
             <View style={styles.dueRow}>
-              <Text style={{ color: "white" }}>Your Due: $1800.00</Text>
+              <Text style={{ color: "white" }}>Your Due: {yourDue.toString()}</Text>
             </View>
           </View>
           <View style={styles.editButtonContainer}>
@@ -53,7 +69,8 @@ const Card = () => {
         <View style={styles.dueCollectAmountRow}>
           <View style={styles.dueAmountContainer}>
             <TextInput
-              placeholder='$00.00               '
+              placeholder={props.payload.dueCollected.toString()}
+              value={props.payload.dueCollected.toString()}
               style={styles.dueCollectAmount}
             ></TextInput>
           </View>
@@ -70,7 +87,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "rgb(87,126,242)",
     height: 180,
-    width: "71%",
+    width: "90%", //"71%",
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },

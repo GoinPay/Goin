@@ -1,17 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
   Image,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from "react-native";
 import HomeIconFrame from "../components/HomeIconFrame";
 import CustomButton from "../components/CustomButton";
 import Card from "../components/Card";
 import ProfileImage from "../components/ProfileImage";
 import Activity, { Type } from "../components/Activity";
+//import SideSwipe from 'react-native-sideswipe';
+import Carousel from 'react-native-snap-carousel';
+import backend from "../backend/BackendAPIs";
 
 const primaryImage = require("../../assets/me.png");
 const addIcon = require("../../assets/inactive-add.png");
@@ -19,6 +23,9 @@ const profile1 = require("../../assets/profile1.png");
 const profile2 = require("../../assets/profile2.png");
 
 const Bills = ({ navigation }) => {
+  const [bills, setBills] = useState([]);
+  const [members, setMembers] = useState([]);
+
   const setIconState = isActive => {
     let width = 25;
     let height = 25;
@@ -39,7 +46,22 @@ const Bills = ({ navigation }) => {
     });
   };
 
+  const { width } = Dimensions.get('window');
+
+  const getData = () => {
+    backend.db.getUserBills('alexander.bronola@gmail.com').then((bills) => {
+      // console.log('bills: ' + JSON.stringify(bills));
+      setBills(bills);
+      setMembers(backend.db.getBillMembers(bills[0].name));
+    });
+  }
+
   React.useEffect(() => {
+
+    backend.db.setChangedCallback(getData);
+
+    getData();
+
     navigation.addListener("focus", () => {
       setIconState(true);
     });
@@ -49,6 +71,29 @@ const Bills = ({ navigation }) => {
 
     return unsubscribe;
   }, []);
+
+
+  const onSlideCard = (index) => {
+    //setIndex(index);
+    const members = backend.db.getBillMembers(bills[index].name);
+    setMembers(members);
+
+    console.log('onSlideCard(), members: ' + JSON.stringify(members));
+  }
+
+  _renderItem = ({ item }) => {
+    if (bills.length) {
+      //console.log('_renderItem bills len: ' + bills.length);
+      const bill = item;
+      return (
+        <View style={styles.cardContainer}>
+          <Card payload={bill[bill.name]} />
+        </View>
+      );
+    } else
+      return <></>
+  }
+
   return (
     <HomeIconFrame
       title='Bills'
@@ -57,8 +102,15 @@ const Bills = ({ navigation }) => {
       showPrimaryHolder={true}
     >
       <View style={styles.container} onStartShouldSetResponder={() => true}>
-        <View style={styles.cardContainer}>
-          <Card />
+        <View >
+          <Carousel
+            data={bills}
+            style={{ width: width, maxHeight: 225 }}
+            itemWidth={width - 50}
+            sliderWidth={width}
+            onSnapToItem={(index) => onSlideCard(index)}
+            renderItem={_renderItem}
+          />
         </View>
         <View style={styles.peopleGroupContainer}>
           <Text style={styles.peopleCaption}>People in the group</Text>
@@ -72,21 +124,14 @@ const Bills = ({ navigation }) => {
                 <Image style={{ width: 24, height: 24 }} source={addIcon} />
               </TouchableOpacity>
             </View>
-            <View style={styles.people}>
-              <ProfileImage image={primaryImage} isPrimary={true} />
-            </View>
-            <View style={styles.people}>
-              <ProfileImage image={profile1} />
-            </View>
-            <View style={styles.people}>
-              <ProfileImage image={profile2} />
-            </View>
-            <View style={styles.people}>
-              <ProfileImage />
-            </View>
-            <View style={styles.people}>
-              <ProfileImage />
-            </View>
+            {members.map((member, key) => {
+              // console.log('key: ' + key);
+              return (
+                <View style={styles.people} key={key}>
+                  <ProfileImage image={key == 0 ? primaryImage : null} isPrimary={member[member.name].isPrimary} name={member.name} />
+                </View>
+              )
+            })}
           </ScrollView>
         </View>
         <View style={styles.activitiesContainer}>

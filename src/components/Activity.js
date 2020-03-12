@@ -14,7 +14,7 @@ export const Type = {
 //export const Type = type;
 
 const Activity = props => {
-  console.log("type: " + props.type + ", " + Type.Generic);
+  // console.log("type: " + props.type + ", " + Type.Generic);
   let message = {
     when: "Today",
     title: props.title,
@@ -36,8 +36,8 @@ const Activity = props => {
           {props.type === Type.Paid ? (
             <ProfileImage image={profile1} />
           ) : (
-            <Image style={{ width: 41, height: 41 }} source={message.icon} />
-          )}
+              <Image style={{ width: 41, height: 41 }} source={message.icon} />
+            )}
         </View>
         <View style={styles.messageArea}>
           <View style={styles.titleArea}>

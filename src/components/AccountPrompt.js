@@ -23,7 +23,7 @@ const AccountPrompt = props => {
       <View style={{ height: "10%" }} />
       <View style={styles.titleArea}>
         <Text style={styles.title}>
-          {props.isCreateAccount ? "Create Account" : "Welcome To Split"}
+          {props.isCreateAccount ? "Create Account" : "Welcome To Goin"}
         </Text>
         <Text style={styles.subTitle}>
           {props.isCreateAccount
