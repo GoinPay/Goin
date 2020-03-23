@@ -40,7 +40,7 @@ const HomeIconFrame = props => {
             <Text style={styles.subTitle}>{props.subTitle}</Text>
           </View>
           <View style={styles.amountTextArea}>
-            <Text style={styles.amountText}>{props.amountAreaText}</Text>
+            <Text style={styles.amountText}>{props.amountAreaValue}</Text>
           </View>
         </View>
       </View>
@@ -119,13 +119,17 @@ const styles = StyleSheet.create({
   },
   amountTextArea: {
     flex: 2,
+    top: "5%",
     width: "26.6%",
     height: "8.5%",
-    alignItems: "flex-start"
+    alignItems: "flex-start",
+    justifyContent: "flex-start"
   },
   amountText: {
+    //backgroundColor: "gray",
     fontSize: 35,
     color: "white",
+    height: 40
     // fontFamily: "serif"
   }
 });

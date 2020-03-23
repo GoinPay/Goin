@@ -19,7 +19,8 @@ import JoinGroup from "./src/Screens/JoinGroup";
 import EnterAmount from "./src/Screens/EnterAmount";
 import BottomNav from "./src/Screens/BottomNav";
 import ForgotPassword from "./src/Screens/ForgotPassword";
-import backend from "./src/backend/BackendAPIs";
+import data from "./src/backend/data";
+import EnterDueDate from "./src/Screens/EnterDueDate";
 
 const Stack = createStackNavigator();
 export default function App() {
@@ -31,8 +32,8 @@ export default function App() {
     }
   };
 
-  backend.initialize();
-  //backend.db.set("accounts", { Alex: "Me" });
+  data.initialize();
+  //data.db.set("accounts", { Alex: "Me" });
   return (
     <NavigationNativeContainer>
       <Stack.Navigator initialRouteName='BottomNav'>
@@ -65,6 +66,11 @@ export default function App() {
         <Stack.Screen
           name='BottomNav'
           component={BottomNav}
+          options={options}
+        />
+        <Stack.Screen
+          name='EnterDueDate'
+          component={EnterDueDate}
           options={options}
         />
       </Stack.Navigator>

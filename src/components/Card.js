@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,21 +8,20 @@ import {
   TextInput
 } from "react-native";
 
-import backend from "../backend/BackendAPIs";
+import data from "../backend/data";
 
 const Card = (props) => {
-  let members = props.payload.members;
-  let db = backend.db;
+  let bill = props.payload.bill;
+  let db = data.db;
   let email = db.removeEmailDots('alexander.bronola@gmail.com');
-  let yourDue = 0;
+  let yourDue = props.payload.yourDue;
 
-  //console.log('card: ' + JSON.stringify(members[email]));
-  if (members && members[email]) {
-    yourDue = members[email].yourDue;
-    if (!yourDue) yourDue = 0;
-  }
 
-  //console.log('yourDue: ' + yourDue);
+  //console.log('payload: ' + JSON.stringify(props.payload));
+  useEffect(() => {
+  });
+
+  console.log('yourDue: ' + yourDue);
 
   return (
     <View style={styles.card}>
@@ -39,8 +38,8 @@ const Card = (props) => {
           </View>
           <View style={styles.descriptionArea}>
             <TextInput
-              placeholder={props.payload.description}
-              value={props.payload.description}
+              placeholder={bill.description}
+              value={bill.description}
               style={styles.descriptionInput}
             ></TextInput>
           </View>
@@ -48,10 +47,10 @@ const Card = (props) => {
         <View style={styles.dueAreaRow}>
           <View style={styles.dueArea}>
             <View style={styles.totalRow}>
-              <Text style={{ color: "white" }}>Total: {props.payload.total}</Text>
+              <Text style={{ color: "white" }}>Total: {bill.total}</Text>
             </View>
             <View style={styles.dueRow}>
-              <Text style={{ color: "white" }}>Your Due: {yourDue.toString()}</Text>
+              <Text style={{ color: "white" }}>Your Due: {yourDue}</Text>
             </View>
           </View>
           <View style={styles.editButtonContainer}>
@@ -69,8 +68,8 @@ const Card = (props) => {
         <View style={styles.dueCollectAmountRow}>
           <View style={styles.dueAmountContainer}>
             <TextInput
-              placeholder={props.payload.dueCollected.toString()}
-              value={props.payload.dueCollected.toString()}
+              placeholder={bill.dueCollected.toString()}
+              value={bill.dueCollected.toString()}
               style={styles.dueCollectAmount}
             ></TextInput>
           </View>

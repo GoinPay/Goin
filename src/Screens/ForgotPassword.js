@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Alert, StyleSheet, Text, View, TextInput } from "react-native";
-import backend from "../backend/BackendAPIs";
+import data from "../backend/data";
 
 import BackgroundFrame from "../components/BackgroundFrame";
 import CustomButton from "../components/CustomButton";
@@ -14,7 +14,7 @@ const ForgotPassword = ({ navigation }) => {
   };
 
   const onResetPassword = () => {
-    backend.user.resetPassword(email).then(
+    data.user.resetPassword(email).then(
       () => {
         Alert.alert("Password reset email has been sent.");
         navigation.navigate("Login");

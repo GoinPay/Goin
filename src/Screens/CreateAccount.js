@@ -1,5 +1,5 @@
 import React from "react";
-import backend from "../backend/BackendAPIs";
+import data from "../backend/data";
 import { Alert } from "react-native";
 
 import AccountPrompt from "../components/AccountPrompt";
@@ -13,9 +13,9 @@ const CreateAccount = ({ navigation }) => {
   };
 
   const onCreateAccount = async (email, password) => {
-    backend.user.createNewAccount(email, password).then(
+    data.user.createNewAccount(email, password).then(
       () => {
-        navigation.navigate("BottomNav");
+        navigation.navigate("SelectType");
       },
       error => {
         Alert.alert(error.message);

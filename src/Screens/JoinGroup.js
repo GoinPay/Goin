@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import HomeIconFrame from "../components/HomeIconFrame";
 import CustomButton from "../components/CustomButton";
+import data from "../backend/data";
 
 const JoinGroup = ({ navigation }) => {
+  const [code, setCode] = useState("");
   navigation.setOptions({ headerLeft: null });
 
   const onCancel = () => {
@@ -11,9 +13,18 @@ const JoinGroup = ({ navigation }) => {
   };
 
   const onJoinGroup = () => {
-    navigation.navigate("EnterAmount");
+    //add him/her to the list of members under bills
+    data.db.addUpdateBillMember(code, { [data.userEmail]: { isPrimary: false } });
+    //add the bill as one of his/her bills
+    data.db.addUpdateUserBill({ [code]: { yourDue: data.newBill.amount } }); //change to computed value later
+
+    navigation.navigate("Bills");
   };
 
+  const onChangeText = (text) => {
+    setCode(text);
+
+  }
   return (
     <HomeIconFrame
       title='Join Group'
@@ -25,6 +36,8 @@ const JoinGroup = ({ navigation }) => {
           <TextInput
             placeholder='Enter Code'
             style={styles.enterCode}
+            onChangeText={onChangeText}
+            value={code}
           ></TextInput>
         </View>
         <View style={styles.instructionContainer}>

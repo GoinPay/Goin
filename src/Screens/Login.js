@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Alert, StyleSheet } from "react-native";
-import backend from "../backend/BackendAPIs";
+import data from "../backend/data";
 
 import AccountPrompt from "../components/AccountPrompt";
 import BackgroundFrame from "../components/BackgroundFrame";
@@ -18,9 +18,9 @@ const Login = props => {
   };
 
   const onLogin = (email, password) => {
-    backend.user.login(email, password).then(
+    data.user.login(email, password).then(
       () => {
-        props.navigation.navigate("BottomNav");
+        props.navigation.navigate("Bills");
       },
       error => {
         Alert.alert(error.message);

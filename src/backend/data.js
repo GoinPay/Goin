@@ -4,16 +4,23 @@ import { firebaseConfig } from "./firebaseConfig";
 
 let This;
 
-class _Backend {
+class Data {
   userEmail = "";
   allUsers = null;
   allBills = null;
   userBills = [];
   usersRef = null;
   billsRef = null;
+  currentBillCode = "";
   onDataChangedCallback = null;
+  yourDue = {};
+  newBill = {};
 
   constructor() {
+    this.newBill.amount = "";
+    this.newBill.dueDate = "";
+    this.newBill.code = "";
+    this.newBill.billType = "";
   }
 
   user = {
@@ -31,8 +38,24 @@ class _Backend {
   };
 
   db = {
-    insert: (ref, data) => {
-      firebase.database().ref(ref).set(data);
+    insertBill: (data) => { //this will delete existing
+      firebase.database().ref("/bills").set(data);
+    },
+
+    addUpdateBill: (data) => {
+      firebase.database().ref("/bills").update(data);
+    },
+
+    addUpdateBillMember: (billCode, data) => {
+      firebase.database().ref("bills/" + billCode + "/members/").update(data);
+    },
+
+    addUpdateUserBill: (data) => {
+      firebase.database().ref("users/" + This.userEmail + "/bills").update(data);
+    },
+
+    updateUserBillDue: (billCode, data) => {
+      firebase.database().ref("users/" + This.userEmail + "/bills/" + billCode).update(data);
     },
 
     setChangedCallback: (callback) => {
@@ -68,7 +91,9 @@ class _Backend {
       This.userBills = [];
 
       Object.keys(This.allUsers[email].bills).map(bill => {
-        //console.log("bill: " + bill);
+        // console.log("bill: " + bill);
+        This.yourDue[bill] = This.allUsers[email].bills[bill]["yourDue"];
+        // console.log("this yourDue: " + This.yourDue[bill]);
         let billNameKey = {
           name: bill,
           [bill]: This.allBills[bill] //you can access its fields by, userBills[userBills.name]
@@ -80,7 +105,8 @@ class _Backend {
     },
 
     getBillMembers: (billName) => {
-      // console.log('billName: ' + billName);
+      console.log('bill code Name: ' + billName);
+      This.currentBillCode = billName;
       // console.log('allBills: ' + JSON.stringify(This.allBills));
       let userBills = [];
       if (This.allBills) {
@@ -131,7 +157,7 @@ class _Backend {
     firebase.auth().onAuthStateChanged(async function (user) {
       if (user) {
         if (This.userEmail == "") {
-          This.userEmail = user.email;
+          This.userEmail = This.db.removeEmailDots(user.email);
           console.log('onAuthStateChanged: email: ' + This.userEmail);
 
           This.db.getUserBills(This.userEmail);
@@ -151,6 +177,6 @@ class _Backend {
   }
 }
 
-const Backend = new _Backend();
+const data = new Data();
 
-export default Backend;
+export default data;

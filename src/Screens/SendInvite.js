@@ -2,20 +2,11 @@ import React from "react";
 import { StyleSheet, Text, View, Alert } from "react-native";
 import HomeIconFrame from "../components/HomeIconFrame";
 import CustomButton from "../components/CustomButton";
-import * as Random from "../Utils/RandomCodeGenerator";
 import * as SMS from "expo-sms";
+import data from "../backend/data";
 
 const SendInvite = ({ navigation }) => {
   navigation.setOptions({ headerLeft: null });
-
-  const getNewCode = () => {
-    let code = Random.TextCode(3);
-    code = code.toUpperCase();
-    code = code + "-" + Random.NumCode(3);
-    return code;
-  };
-
-  const code = getNewCode();
 
   const sendSMS = async () => {
     //const { status } = await Expo.Permissions.askAsync(Expo.Permissions.SMS);
@@ -23,7 +14,7 @@ const SendInvite = ({ navigation }) => {
     if (isAvailable) {
       const { result } = await SMS.sendSMSAsync(
         "",
-        `Join my SplitEven! Use my invite code ${code}. Download the app here: URL`
+        `Join my SplitEven! Use my invite code ${data.currentBillCode}. Download the app here: URL`
       );
       Alert.alert("Successfully sent an invite.");
     } else {
@@ -43,7 +34,7 @@ const SendInvite = ({ navigation }) => {
     >
       <View style={styles.container}>
         <View style={styles.codeContainer}>
-          <Text style={styles.code}>{code}</Text>
+          <Text style={styles.code}>{data.currentBillCode}</Text>
         </View>
         <View style={styles.instructionContainer}>
           <Text style={styles.instruction}>

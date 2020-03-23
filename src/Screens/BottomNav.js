@@ -10,6 +10,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SelectType from "./SelectType";
 import Bills from "./Bills";
 import Settings from "./Settings";
+import data from '../backend/data';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,7 +18,7 @@ function BottomNav({ navigation }) {
   navigation.setOptions({ headerLeft: null, headerRight: null });
   return (
     <Tab.Navigator
-      initialRouteName='SelectType'
+      initialRouteName="SelectType"
       tabBarOptions={{
         showLabel: false,
         // labelStyle: null,

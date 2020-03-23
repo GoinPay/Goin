@@ -15,7 +15,7 @@ import ProfileImage from "../components/ProfileImage";
 import Activity, { Type } from "../components/Activity";
 //import SideSwipe from 'react-native-sideswipe';
 import Carousel from 'react-native-snap-carousel';
-import backend from "../backend/BackendAPIs";
+import data from "../backend/data";
 
 const primaryImage = require("../../assets/me.png");
 const addIcon = require("../../assets/inactive-add.png");
@@ -49,19 +49,20 @@ const Bills = ({ navigation }) => {
   const { width } = Dimensions.get('window');
 
   const getData = () => {
-    backend.db.getUserBills('alexander.bronola@gmail.com').then((bills) => {
+    data.db.getUserBills('alexander.bronola@gmail.com').then((bills) => {
       // console.log('bills: ' + JSON.stringify(bills));
       setBills(bills);
-      setMembers(backend.db.getBillMembers(bills[0].name));
+      setMembers(data.db.getBillMembers(bills[0].name));
     });
   }
 
+  const onAdd = () => {
+    navigation.navigate("SendInvite");
+  }
+
   React.useEffect(() => {
-
-    backend.db.setChangedCallback(getData);
-
+    data.db.setChangedCallback(getData);
     getData();
-
     navigation.addListener("focus", () => {
       setIconState(true);
     });
@@ -75,7 +76,7 @@ const Bills = ({ navigation }) => {
 
   const onSlideCard = (index) => {
     //setIndex(index);
-    const members = backend.db.getBillMembers(bills[index].name);
+    const members = data.db.getBillMembers(bills[index].name);
     setMembers(members);
 
     console.log('onSlideCard(), members: ' + JSON.stringify(members));
@@ -83,11 +84,15 @@ const Bills = ({ navigation }) => {
 
   _renderItem = ({ item }) => {
     if (bills.length) {
-      //console.log('_renderItem bills len: ' + bills.length);
       const bill = item;
+      let yourDue = data.yourDue[bill.name];
+      let payload = {
+        bill: bill[bill.name],
+        yourDue: yourDue
+      }
       return (
         <View style={styles.cardContainer}>
-          <Card payload={bill[bill.name]} />
+          <Card payload={payload} />
         </View>
       );
     } else
@@ -120,7 +125,7 @@ const Bills = ({ navigation }) => {
             contentContainerStyle={{ height: 80 }}
           >
             <View style={styles.people}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={onAdd}>
                 <Image style={{ width: 24, height: 24 }} source={addIcon} />
               </TouchableOpacity>
             </View>

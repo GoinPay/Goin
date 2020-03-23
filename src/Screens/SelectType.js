@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import HomeIconFrame from "../components/HomeIconFrame";
 import CustomButton from "../components/CustomButton";
+import data from '../backend/data';
 
 const SelectType = ({ navigation }) => {
   const setIconState = isActive => {
@@ -36,8 +37,13 @@ const SelectType = ({ navigation }) => {
   }, []);
 
   const onJoinGroup = () => {
-    navigation.navigate("SelectType");
+    navigation.navigate("JoinGroup");
   };
+
+  const onAdd = (type) => {
+    data.newBill.billType = type;
+    navigation.navigate("EnterAmount");
+  }
 
   return (
     <HomeIconFrame
@@ -48,25 +54,25 @@ const SelectType = ({ navigation }) => {
     >
       <View style={styles.container}>
         <View style={styles.typeButtonContainer}>
-          <TouchableOpacity style={styles.iconContainer}>
+          <TouchableOpacity style={styles.iconContainer} onPress={onAdd.bind(this, "Home Rent")}>
             <Image
               style={{ width: 56, height: 50 }}
               source={require("../../assets/home-icon.png")}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconContainer}>
+          <TouchableOpacity style={styles.iconContainer} onPress={onAdd.bind(this, "Electric")}>
             <Image
               style={{ width: 41, height: 51 }}
               source={require("../../assets/light-icon.png")}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconContainer}>
+          <TouchableOpacity style={styles.iconContainer} onPress={onAdd.bind(this, "Wifi")}>
             <Image
               style={{ width: 50, height: 50 }}
               source={require("../../assets/wifi-icon.png")}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconContainer}>
+          <TouchableOpacity style={styles.iconContainer} onPress={onAdd.bind(this, "Water")}>
             <Image
               style={{ width: 45, height: 50 }}
               source={require("../../assets/shower-icon.png")}
