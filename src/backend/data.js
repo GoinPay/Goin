@@ -15,6 +15,7 @@ class Data {
   onDataChangedCallback = null;
   yourDue = {};
   newBill = {};
+  bottomNavEntry = "";
 
   constructor() {
     this.newBill.amount = "";
@@ -25,11 +26,13 @@ class Data {
 
   user = {
     createNewAccount: async (email, password) => {
+      console.log('before login!');
       return await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password);
     },
     login: async (email, password) => {
+      console.log('before login!');
       return await firebase.auth().signInWithEmailAndPassword(email, password);
     },
     resetPassword: async (email, password) => {
@@ -42,8 +45,8 @@ class Data {
       firebase.database().ref("/bills").set(data);
     },
 
-    addUpdateBill: (data) => {
-      firebase.database().ref("/bills").update(data);
+    addUpdateBill: async (data) => {
+      return await firebase.database().ref("/bills").update(data);
     },
 
     addUpdateBillMember: (billCode, data) => {

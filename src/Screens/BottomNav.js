@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, Platform } from "react-native";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 //import { NavigationNativeContainer } from "@react-navigation/native";
@@ -15,14 +15,21 @@ import data from '../backend/data';
 const Tab = createBottomTabNavigator();
 
 function BottomNav({ navigation }) {
+  let entry = data.bottomNavEntry;
+  if (entry === "") entry = "SelectType";
+
+  let tabHeight = 50;
+  if (Platform.OS === 'ios')
+    tabHeight = 90;
+
   navigation.setOptions({ headerLeft: null, headerRight: null });
   return (
     <Tab.Navigator
-      initialRouteName="SelectType"
+      initialRouteName={entry}
       tabBarOptions={{
         showLabel: false,
         // labelStyle: null,
-        style: { height: 50, backgroundColor: "rgb(25,19,64)" },
+        style: { height: tabHeight, backgroundColor: "rgb(25,19,64)" },
         activeBackgroundColor: "transparent", //"rgb(87,126,242)",
         tabStyle: {}
         // activeBackgroundColor: "rgb(25,19,64)"
@@ -58,7 +65,7 @@ const options = {
     tabBarIcon: () => (
       <Image
         style={{ width: 25, height: 25 }}
-        source={require("../../assets/active-add.png")}
+        source={require("../../assets/inactive-add.png")}
       />
     )
   },

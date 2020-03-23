@@ -16,7 +16,8 @@ const CreateAccount = ({ navigation }) => {
     data.user.createNewAccount(email, password).then(
       () => {
         data.db.addUpdateUser({ [email]: { phone: "", photo: "" } });
-        navigation.navigate("SelectType");
+        data.bottomNavEntry = "SelectType";
+        props.navigation.navigate("BottomNav");
       },
       error => {
         Alert.alert(error.message);

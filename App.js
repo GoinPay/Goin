@@ -102,7 +102,7 @@ const options = ({ navigation }) => ({
     <Text
       style={{ paddingRight: 16 }}
       onPress={() => {
-        navigation.popToTop();
+        navigation.goBack();//popToTop();
       }}
     >
       Cancel

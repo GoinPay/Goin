@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
 import HomeIconFrame from "../components/HomeIconFrame";
 import CustomButton from "../components/CustomButton";
 import * as Random from "../Utils/RandomCodeGenerator";
@@ -40,9 +40,12 @@ const EnterDueDate = ({ navigation }) => {
         }
       }
     }
-    data.db.addUpdateBill({ [data.newBill.code]: newBill });
-
-    navigation.navigate("Bills");
+    data.db.addUpdateBill({ [data.newBill.code]: newBill }).then(() => {
+      Alert.alert("Successfully add a new bill acount.");
+      navigation.navigate("Bills");
+    }).catch((error) => {
+      Alert.alert("Failed to add the new account. " + error);
+    });
   }
   const onDate = () => {
     datePickerRef.current.onPressDate();

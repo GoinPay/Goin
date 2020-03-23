@@ -14,7 +14,7 @@ import Card from "../components/Card";
 import ProfileImage from "../components/ProfileImage";
 import Activity, { Type } from "../components/Activity";
 //import SideSwipe from 'react-native-sideswipe';
-import Carousel from 'react-native-snap-carousel';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 import data from "../backend/data";
 
 const primaryImage = require("../../assets/me.png");
@@ -24,6 +24,7 @@ const profile2 = require("../../assets/profile2.png");
 
 const Bills = ({ navigation }) => {
   const [bills, setBills] = useState([]);
+  const [activeSlide, setActiveSlide] = useState(0);
   const [members, setMembers] = useState([]);
 
   const setIconState = isActive => {
@@ -60,6 +61,28 @@ const Bills = ({ navigation }) => {
     navigation.navigate("SendInvite");
   }
 
+  const getPagination = () => {
+    return (
+      <Pagination
+        dotsLength={bills.length}
+        activeDotIndex={activeSlide}
+        containerStyle={{ backgroundColor: 'transparent', marginBottom: "12%" }}
+        dotStyle={{
+          width: 6,
+          height: 6,
+          borderRadius: 3,
+          marginHorizontal: .01,
+          backgroundColor: 'rgba(255, 255, 255, 0.92)'
+        }}
+        inactiveDotStyle={{
+          // Define styles for inactive dots here
+        }}
+        inactiveDotOpacity={0.4}
+        inactiveDotScale={0.6}
+      />
+    );
+  }
+
   React.useEffect(() => {
     data.db.setChangedCallback(getData);
     getData();
@@ -76,6 +99,7 @@ const Bills = ({ navigation }) => {
 
   const onSlideCard = (index) => {
     //setIndex(index);
+    setActiveSlide(index);
     const members = data.db.getBillMembers(bills[index].name);
     setMembers(members);
 
@@ -116,6 +140,7 @@ const Bills = ({ navigation }) => {
             onSnapToItem={(index) => onSlideCard(index)}
             renderItem={_renderItem}
           />
+          {getPagination()}
         </View>
         <View style={styles.peopleGroupContainer}>
           <Text style={styles.peopleCaption}>People in the group</Text>
@@ -174,7 +199,8 @@ const styles = StyleSheet.create({
   cardContainer: {
     // marginTop: -30,
     alignItems: "center",
-    marginBottom: "12%"
+    marginBottom: 2,
+    //backgroundColor: "gray"
   },
   peopleCaption: {
     alignItems: "flex-start",

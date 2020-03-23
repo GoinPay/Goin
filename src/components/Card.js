@@ -13,7 +13,6 @@ import data from "../backend/data";
 const Card = (props) => {
   let bill = props.payload.bill;
   let db = data.db;
-  let email = db.removeEmailDots('alexander.bronola@gmail.com');
   let yourDue = props.payload.yourDue;
 
 

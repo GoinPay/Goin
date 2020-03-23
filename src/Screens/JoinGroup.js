@@ -9,10 +9,6 @@ const JoinGroup = ({ navigation }) => {
   const [isValidCode, setValid] = useState(false);
   navigation.setOptions({ headerLeft: null });
 
-  const onCancel = () => {
-    navigation.navigate("Login");
-  };
-
   const onJoinGroup = () => {
     //add him/her to the list of members under bills
     data.db.addUpdateBillMember(code, { [data.userEmail]: { isPrimary: false } });

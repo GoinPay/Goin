@@ -20,7 +20,9 @@ const Login = props => {
   const onLogin = (email, password) => {
     data.user.login(email, password).then(
       () => {
-        props.navigation.navigate("Bills");
+        console.log("after login.")
+        data.bottomNavEntry = "Bills";
+        props.navigation.navigate("BottomNav");
       },
       error => {
         Alert.alert(error.message);
