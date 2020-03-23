@@ -67,11 +67,9 @@ const Card = (props) => {
         </View>
         <View style={styles.dueCollectAmountRow}>
           <View style={styles.dueAmountContainer}>
-            <TextInput
-              placeholder={bill.dueCollected.toString()}
-              value={bill.dueCollected.toString()}
+            <Text
               style={styles.dueCollectAmount}
-            ></TextInput>
+            >{bill.dueCollected.toString()}</Text>
           </View>
           <TouchableOpacity style={styles.payItButton}>
             <Text style={{ color: "white" }}>Pay It</Text>
@@ -159,7 +157,8 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   dueCollectAmount: {
-    fontSize: 35
+    fontSize: 35,
+    color: "#fff",
   },
   dueAmountContainer: {
     flex: 8

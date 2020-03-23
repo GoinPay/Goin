@@ -36,7 +36,7 @@ export default function App() {
   //data.db.set("accounts", { Alex: "Me" });
   return (
     <NavigationNativeContainer>
-      <Stack.Navigator initialRouteName='BottomNav'>
+      <Stack.Navigator initialRouteName='Login'>
         <Stack.Screen name='Login' component={Login} options={options} />
         <Stack.Screen
           name='NewAccount'

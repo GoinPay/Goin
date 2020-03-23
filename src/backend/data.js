@@ -54,6 +54,10 @@ class Data {
       firebase.database().ref("users/" + This.userEmail + "/bills").update(data);
     },
 
+    addUpdateUser: (data) => {
+      firebase.database().ref("users/").update(data);
+    },
+
     updateUserBillDue: (billCode, data) => {
       firebase.database().ref("users/" + This.userEmail + "/bills/" + billCode).update(data);
     },
@@ -84,7 +88,7 @@ class Data {
 
     getUserBills: async (userEmail) => {
       // console.log("getUserBills: " + userEmail);
-      const email = This.db.removeEmailDots(userEmail);
+      const email = userEmail; //This.db.removeEmailDots(userEmail);
 
       if (!This.allUsers) await This.db.getDataUsers();
       if (!This.allBills) await This.db.getDataBills();

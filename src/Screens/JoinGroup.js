@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import { StyleSheet, Text, View, TextInput, Alert } from "react-native";
 import HomeIconFrame from "../components/HomeIconFrame";
 import CustomButton from "../components/CustomButton";
 import data from "../backend/data";
 
 const JoinGroup = ({ navigation }) => {
   const [code, setCode] = useState("");
+  const [isValidCode, setValid] = useState(false);
   navigation.setOptions({ headerLeft: null });
 
   const onCancel = () => {
@@ -15,15 +16,25 @@ const JoinGroup = ({ navigation }) => {
   const onJoinGroup = () => {
     //add him/her to the list of members under bills
     data.db.addUpdateBillMember(code, { [data.userEmail]: { isPrimary: false } });
-    //add the bill as one of his/her bills
+    //add the bill to his/her account
     data.db.addUpdateUserBill({ [code]: { yourDue: data.newBill.amount } }); //change to computed value later
 
     navigation.navigate("Bills");
   };
 
   const onChangeText = (text) => {
-    setCode(text);
-
+    console.log('input len: ' + text.length);
+    if (text.length === 7) {
+      if (data.allBills[text]) {
+        setValid(true);
+        console.log('bills found');
+      } else {
+        Alert.alert("Invalide Code! Please try again.");
+        console.log('bills not found');
+        setValid(false);
+      }
+    } else setValid(false);
+    setCode(text.toUpperCase());
   }
   return (
     <HomeIconFrame
@@ -44,8 +55,9 @@ const JoinGroup = ({ navigation }) => {
           <Text style={styles.instruction}>
             Ask account holder to send join the code
           </Text>
+          <Text style={styles.instruction}></Text>
         </View>
-        <CustomButton onPress={onJoinGroup} title='Join' />
+        <CustomButton disabled={!isValidCode} onPress={onJoinGroup} title='Join' />
       </View>
     </HomeIconFrame>
   );
@@ -61,7 +73,7 @@ const styles = StyleSheet.create({
   codeContainer: {
     borderBottomColor: "rgba(255,255,255, .2)",
     borderBottomWidth: 1,
-    marginBottom: 5,
+    marginBottom: 10,
     width: "90%",
     alignItems: "center"
   },

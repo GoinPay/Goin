@@ -49,7 +49,7 @@ const Bills = ({ navigation }) => {
   const { width } = Dimensions.get('window');
 
   const getData = () => {
-    data.db.getUserBills('alexander.bronola@gmail.com').then((bills) => {
+    data.db.getUserBills(data.userEmail).then((bills) => {
       // console.log('bills: ' + JSON.stringify(bills));
       setBills(bills);
       setMembers(data.db.getBillMembers(bills[0].name));
