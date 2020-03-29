@@ -23,7 +23,7 @@ const EnterAmount = ({ navigation }) => {
   };
 
   return (
-    <HomeIconFrame title='Enter Amount' showProfile={false}>
+    <HomeIconFrame title='Enter Amount' subTitle={data.newBill.billType} showProfile={false}>
       <View style={styles.container}>
         <View style={styles.codeContainer}>
           <TextInputMask

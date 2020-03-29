@@ -90,23 +90,25 @@ class Data {
     },
 
     getUserBills: async (userEmail) => {
-      // console.log("getUserBills: " + userEmail);
+      console.log("getUserBills: " + userEmail);
       const email = userEmail; //This.db.removeEmailDots(userEmail);
 
       if (!This.allUsers) await This.db.getDataUsers();
       if (!This.allBills) await This.db.getDataBills();
       This.userBills = [];
 
-      Object.keys(This.allUsers[email].bills).map(bill => {
-        // console.log("bill: " + bill);
-        This.yourDue[bill] = This.allUsers[email].bills[bill]["yourDue"];
-        // console.log("this yourDue: " + This.yourDue[bill]);
-        let billNameKey = {
-          name: bill,
-          [bill]: This.allBills[bill] //you can access its fields by, userBills[userBills.name]
-        }
-        This.userBills.push(billNameKey);
-      });
+      if (This.allUsers[email].bills) {
+        Object.keys(This.allUsers[email].bills).map(bill => {
+          // console.log("bill: " + bill);
+          This.yourDue[bill] = This.allUsers[email].bills[bill]["yourDue"];
+          // console.log("this yourDue: " + This.yourDue[bill]);
+          let billNameKey = {
+            name: bill,
+            [bill]: This.allBills[bill] //you can access its fields by, userBills[userBills.name]
+          }
+          This.userBills.push(billNameKey);
+        });
+      }
       return This.userBills;
       console.log(JSON.stringify(this.userBills));
     },
@@ -135,6 +137,8 @@ class Data {
     await this.db.getDataUsers();
     await this.db.getDataBills();
 
+    //add new computation here
+
     if (this.onDataChangedCallback)
       this.onDataChangedCallback();
   }
@@ -150,6 +154,31 @@ class Data {
     this.onDataChanged();
   }
 
+  onSuccessLogin() {
+    this.usersRef = firebase.database().ref("/users/" + this.userEmail);
+    //this.billsRef = firebase.database().ref("/bills");
+
+    // firebase.auth().onAuthStateChanged(async function (user) {
+    //   if (user) {
+    //     if (This.userEmail == "") {
+    //       This.userEmail = This.db.removeEmailDots(user.email);
+    //       console.log('onAuthStateChanged: email: ' + This.userEmail);
+
+    //       This.db.getUserBills(This.userEmail);
+    //     }
+    //   } else {
+    //     // No user is signed in.
+    //   }
+    // });
+
+    this.usersRef.on("child_added", this.onUsersChanged.bind(this));
+    this.usersRef.on("child_removed", this.onUsersChanged.bind(this));
+    this.usersRef.on("child_changed", this.onUsersChanged.bind(this));
+
+    // this.billsRef.on("child_added", this.onBillsChanged.bind(this));
+    // this.billsRef.on("child_removed", this.onBillsChanged.bind(this));
+    // this.billsRef.on("child_changed", this.onBillsChanged.bind(this));
+  }
 
   initialize() {
     This = this;
@@ -157,30 +186,6 @@ class Data {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
-
-    this.usersRef = firebase.database().ref("/users");
-    this.billsRef = firebase.database().ref("/bills");
-
-    firebase.auth().onAuthStateChanged(async function (user) {
-      if (user) {
-        if (This.userEmail == "") {
-          This.userEmail = This.db.removeEmailDots(user.email);
-          console.log('onAuthStateChanged: email: ' + This.userEmail);
-
-          This.db.getUserBills(This.userEmail);
-        }
-      } else {
-        // No user is signed in.
-      }
-    });
-
-    this.usersRef.on("child_added", this.onUsersChanged.bind(this));
-    this.usersRef.on("child_removed", this.onUsersChanged.bind(this));
-    this.usersRef.on("child_changed", this.onUsersChanged.bind(this));
-
-    this.billsRef.on("child_added", this.onBillsChanged.bind(this));
-    this.billsRef.on("child_removed", this.onBillsChanged.bind(this));
-    this.billsRef.on("child_changed", this.onBillsChanged.bind(this));
   }
 }
 

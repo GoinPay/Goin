@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,7 +13,6 @@ import CustomButton from "../components/CustomButton";
 import Card from "../components/Card";
 import ProfileImage from "../components/ProfileImage";
 import Activity, { Type } from "../components/Activity";
-//import SideSwipe from 'react-native-sideswipe';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import data from "../backend/data";
 
@@ -26,6 +25,7 @@ const Bills = ({ navigation }) => {
   const [bills, setBills] = useState([]);
   const [activeSlide, setActiveSlide] = useState(0);
   const [members, setMembers] = useState([]);
+  const carousel = useRef();
 
   const setIconState = isActive => {
     let width = 25;
@@ -51,9 +51,10 @@ const Bills = ({ navigation }) => {
 
   const getData = () => {
     data.db.getUserBills(data.userEmail).then((bills) => {
-      // console.log('bills: ' + JSON.stringify(bills));
+      // console.log('getData bills: ' + JSON.stringify(bills));  
       setBills(bills);
-      setMembers(data.db.getBillMembers(bills[0].name));
+      const billMembers = data.db.getBillMembers(bills[0].name);
+      setMembers(billMembers);
     });
   }
 
@@ -66,12 +67,12 @@ const Bills = ({ navigation }) => {
       <Pagination
         dotsLength={bills.length}
         activeDotIndex={activeSlide}
-        containerStyle={{ backgroundColor: 'transparent', marginBottom: "12%" }}
+        containerStyle={{ paddingVertical: 0, backgroundColor: 'transparent', marginBottom: "12%" }}
         dotStyle={{
           width: 6,
           height: 6,
           borderRadius: 3,
-          marginHorizontal: .01,
+          marginHorizontal: 1,
           backgroundColor: 'rgba(255, 255, 255, 0.92)'
         }}
         inactiveDotStyle={{
@@ -83,7 +84,7 @@ const Bills = ({ navigation }) => {
     );
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     data.db.setChangedCallback(getData);
     getData();
     navigation.addListener("focus", () => {
@@ -103,10 +104,14 @@ const Bills = ({ navigation }) => {
     const members = data.db.getBillMembers(bills[index].name);
     setMembers(members);
 
-    console.log('onSlideCard(), members: ' + JSON.stringify(members));
+    // console.log('onSlideCard(), members: ' + JSON.stringify(members));
   }
 
   _renderItem = ({ item }) => {
+    console.log('bill len: ' + bills.length);
+    console.log('item: ' + JSON.stringify(item));
+    //carousel.current.triggerRenderingHack();
+    // carousel.current.snapToItem(0);
     if (bills.length) {
       const bill = item;
       let yourDue = data.yourDue[bill.name];
@@ -114,6 +119,7 @@ const Bills = ({ navigation }) => {
         bill: bill[bill.name],
         yourDue: yourDue
       }
+      // console.log("rendering carousel");
       return (
         <View style={styles.cardContainer}>
           <Card payload={payload} />
@@ -122,7 +128,7 @@ const Bills = ({ navigation }) => {
     } else
       return <></>
   }
-
+  //onStartShouldSetResponder={() => true}
   return (
     <HomeIconFrame
       title='Bills'
@@ -130,9 +136,11 @@ const Bills = ({ navigation }) => {
       preTitle='Grouped payment'
       showPrimaryHolder={true}
     >
-      <View style={styles.container} onStartShouldSetResponder={() => true}>
-        <View >
+      <View style={styles.container} >
+        <View>
           <Carousel
+            ref={carousel}
+            removeClippedSubviews={false} //without this, it won't display a singe card on IOS
             data={bills}
             style={{ width: width, maxHeight: 225 }}
             itemWidth={width - 50}
@@ -140,6 +148,8 @@ const Bills = ({ navigation }) => {
             onSnapToItem={(index) => onSlideCard(index)}
             renderItem={_renderItem}
           />
+        </View>
+        <View style={styles.paginationContainer}>
           {getPagination()}
         </View>
         <View style={styles.peopleGroupContainer}>
@@ -193,13 +203,20 @@ const Bills = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
     //  backgroundColor: "gray"
+  },
+  paginationContainer: {
+    height: "5%",
+    //backgroundColor: "gray",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10
   },
   cardContainer: {
     // marginTop: -30,
     alignItems: "center",
-    marginBottom: 2,
+    marginBottom: 3,
     //backgroundColor: "gray"
   },
   peopleCaption: {

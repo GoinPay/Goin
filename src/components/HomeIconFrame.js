@@ -1,11 +1,15 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Platform } from "react-native";
 import BackgroundFrame from "./BackgroundFrame";
 import ProfileImage from "./ProfileImage";
 
 const primaryImage = require("../../assets/me.png");
+let isIos = false;
+if (Platform.OS === 'ios')
+  isIos = true;
 
 const HomeIconFrame = props => {
+
   return (
     <BackgroundFrame>
       <View style={styles.container}>
@@ -71,7 +75,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     // paddingLeft: "5.3%",
-    //marginBottom: "3%"
+    paddingTop: isIos ? "3%" : 0,
     paddingBottom: "7%",
     //marginTop: 4,
     // marginBottom: 10

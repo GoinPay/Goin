@@ -16,11 +16,11 @@ const Card = (props) => {
   let yourDue = props.payload.yourDue;
 
 
-  //console.log('payload: ' + JSON.stringify(props.payload));
+  console.log('Card bill: ' + JSON.stringify(bill));
   useEffect(() => {
   });
 
-  console.log('yourDue: ' + yourDue);
+  console.log('card yourDue: ' + yourDue);
 
   return (
     <View style={styles.card}>

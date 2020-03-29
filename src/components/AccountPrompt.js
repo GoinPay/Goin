@@ -93,7 +93,8 @@ const styles = StyleSheet.create({
     width: "100%",
     marginBottom: "3.5%",
     borderRadius: 10,
-    paddingLeft: "3.2%"
+    paddingLeft: "3.2%",
+    fontSize: 18
   }
 });
 

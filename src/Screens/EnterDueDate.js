@@ -5,10 +5,11 @@ import CustomButton from "../components/CustomButton";
 import * as Random from "../Utils/RandomCodeGenerator";
 import DatePicker from 'react-native-datepicker';
 import data from '../backend/data';
+import moment from 'moment';
 
 const EnterDueDate = ({ navigation }) => {
   navigation.setOptions({ headerLeft: null });
-  const [date, setDate] = useState("01/01/2020")
+  const [date, setDate] = useState(moment().format('MM/DD/YYYY'));
   const datePickerRef = useRef(null);
 
   const getNewCode = () => {
@@ -27,7 +28,6 @@ const EnterDueDate = ({ navigation }) => {
     console.log('billType: ' + data.newBill.billType);
     console.log('amount: ' + data.newBill.amount);
 
-    data.db.addUpdateUserBill({ [data.newBill.code]: { yourDue: data.newBill.amount } });
     const newBill = {
       address: "",
       description: data.newBill.billType,
@@ -42,6 +42,7 @@ const EnterDueDate = ({ navigation }) => {
     }
     data.db.addUpdateBill({ [data.newBill.code]: newBill }).then(() => {
       Alert.alert("Successfully add a new bill acount.");
+      data.db.addUpdateUserBill({ [data.newBill.code]: { yourDue: data.newBill.amount } });
       navigation.navigate("Bills");
     }).catch((error) => {
       Alert.alert("Failed to add the new account. " + error);
@@ -77,9 +78,12 @@ const EnterDueDate = ({ navigation }) => {
             confirmBtnText="Confirm"
             cancelBtnText="Cancel"
             customStyles={{
-              dateInput: {
-                marginLeft: 36,
+              datePicker: {
+                backgroundColor: "rgb(87,126,242)",
               },
+              btnTextConfirm: {
+                color: "rgb(44,69,217)"
+              }
             }}
             onDateChange={date => {
               setDate(date);

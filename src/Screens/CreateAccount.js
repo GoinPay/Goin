@@ -15,9 +15,13 @@ const CreateAccount = ({ navigation }) => {
   const onCreateAccount = async (email, password) => {
     data.user.createNewAccount(email, password).then(
       () => {
-        data.db.addUpdateUser({ [email]: { phone: "", photo: "" } });
+        const _email = data.db.removeEmailDots(email);
+        data.userEmail = _email;
+        data.onSuccessLogin();
+        //console.log('new email: ' + _email);
+        data.db.addUpdateUser({ [_email]: { phone: "", photo: "" } });
         data.bottomNavEntry = "SelectType";
-        props.navigation.navigate("BottomNav");
+        navigation.navigate("BottomNav");
       },
       error => {
         Alert.alert(error.message);
