@@ -1,8 +1,9 @@
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, Keyboard, Dimensions } from "react-native";
 
 const gradientColors = ["rgb(87,126,242)", "rgb(44,69,217)"];
+var { Windowheight, width } = Dimensions.get('window');
 
 const AccountFrame = props => {
   const dismissKeyboard = () => {
@@ -20,7 +21,8 @@ const AccountFrame = props => {
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1
+    flex: 1,
+    height: Windowheight
   }
 });
 

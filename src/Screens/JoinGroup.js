@@ -35,7 +35,7 @@ const JoinGroup = ({ navigation }) => {
   return (
     <HomeIconFrame
       title='Join Group'
-      subTitle='Apartment Rent:'
+      // subTitle='Apartment Rent:'
       showProfile={false}
     >
       <View style={styles.container}>

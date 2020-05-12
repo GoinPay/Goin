@@ -1,33 +1,77 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
   Image,
   TouchableOpacity,
-  TextInput
+  TextInput,
+  Alert
 } from "react-native";
 
 import data from "../backend/data";
 
 const Card = (props) => {
+  const descInput = useRef();
+  const [textColor, setTxtColor] = useState('white');
+  const [isEdit, setEdit] = useState(false);
+  //console.log('currentBillDesc: ' + data.currentBillDesc);
+  const [billDesc, onChangeDesc] = useState(data.currentBillDesc);
+
+  console.log('billDesc: ' + billDesc);
+
   let bill = props.payload.bill;
   let db = data.db;
   let yourDue = props.payload.yourDue;
 
+  const Edit = () => {
+    setEdit(true);
+  }
 
-  console.log('Card bill: ' + JSON.stringify(bill));
+  const onDelete = () => {
+    data.db.deleteUserBillByCode(data.currentBillCode);
+  }
+
+  const Delete = () => {
+    Alert.alert(
+      'Delete',
+      'Are you sure you want to delete this bill?',
+      [
+        { text: 'NO', onPress: () => { } },
+        { text: 'YES', onPress: onDelete },
+      ]
+    );
+  }
+
+  const onFocusChange = () => {
+    setTxtColor("rgba(255,255,255, 0.5)");
+  }
+
+  const onBlurChange = () => {
+    setTxtColor("rgba(255,255,255, 1)");
+    setEdit(false);
+    bill.description = billDesc;
+    data.db.addUpdateBill({ [data.currentBillCode]: bill });
+  }
+
   useEffect(() => {
+    if (isEdit) descInput.current.focus();
+    if (billDesc == "") onChangeDesc(data.currentBillDesc);
   });
-
-  console.log('card yourDue: ' + yourDue);
 
   return (
     <View style={styles.card}>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.xButton}>
-          <Text style={{ fontSize: 14, color: "white" }}>X</Text>
-        </TouchableOpacity>
+        <View style={styles.xButton}>
+          <TouchableOpacity
+            onPress={Delete}
+          >
+            <Image
+              style={{ width: 10, height: 10 }}
+              source={require("../../assets/clear-button.png")}
+            />
+          </TouchableOpacity>
+        </View>
         <View style={styles.homeRow}>
           <View style={styles.homeIcon}>
             <Image
@@ -37,9 +81,15 @@ const Card = (props) => {
           </View>
           <View style={styles.descriptionArea}>
             <TextInput
-              placeholder={bill.description}
-              value={bill.description}
-              style={styles.descriptionInput}
+              ref={input => descInput.current = input}
+              value={billDesc}
+              style={[styles.descriptionInput, { color: textColor }]}
+              editable={isEdit}
+              blurOnSubmit={false}
+              onChangeText={text => onChangeDesc(text)}
+              selectTextOnFocus={true}
+              onFocus={onFocusChange}
+              onBlur={onBlurChange}
             ></TextInput>
           </View>
         </View>
@@ -53,7 +103,9 @@ const Card = (props) => {
             </View>
           </View>
           <View style={styles.editButtonContainer}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={Edit}
+            >
               <Image
                 style={{ width: 20, height: 20 }}
                 source={require("../../assets/pen.png")}
@@ -93,13 +145,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0
   },
   container: {
-    flex: 1
+    flex: 1,
+    marginTop: 5
   },
   xButton: {
     flexDirection: "row",
     justifyContent: "flex-end",
     marginTop: 5,
-    marginRight: 15
+    marginRight: 15,
+    zIndex: 1
   },
   homeRow: {
     //  flex: 1,
@@ -123,7 +177,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     borderBottomColor: "rgba(255,255,255, .2)",
     borderBottomWidth: 1,
-    marginRight: 20
+    marginRight: 30
   },
   dueAreaRow: {
     // flex: 1,

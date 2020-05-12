@@ -26,10 +26,11 @@ const SendInvite = ({ navigation }) => {
     // navigation.navigate("JoinGroup");
     sendSMS();
   };
+
   return (
     <HomeIconFrame
       title='Send Invite'
-      subTitle='Apartment Rent:'
+      subTitle={data.currentBillDesc}
       showProfile={false}
     >
       <View style={styles.container}>

@@ -6,7 +6,8 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Platform
 } from "react-native";
 import HomeIconFrame from "../components/HomeIconFrame";
 import CustomButton from "../components/CustomButton";
@@ -21,10 +22,15 @@ const addIcon = require("../../assets/inactive-add.png");
 const profile1 = require("../../assets/profile1.png");
 const profile2 = require("../../assets/profile2.png");
 
+let isIos = false;
+if (Platform.OS === 'ios')
+  isIos = true;
+
 const Bills = ({ navigation }) => {
   const [bills, setBills] = useState([]);
   const [activeSlide, setActiveSlide] = useState(0);
   const [members, setMembers] = useState([]);
+  const [isBounces, setBounces] = useState(false);
   const carousel = useRef();
 
   const setIconState = isActive => {
@@ -72,7 +78,7 @@ const Bills = ({ navigation }) => {
           width: 6,
           height: 6,
           borderRadius: 3,
-          marginHorizontal: 1,
+          marginHorizontal: 0.1,
           backgroundColor: 'rgba(255, 255, 255, 0.92)'
         }}
         inactiveDotStyle={{
@@ -103,15 +109,12 @@ const Bills = ({ navigation }) => {
     setActiveSlide(index);
     const members = data.db.getBillMembers(bills[index].name);
     setMembers(members);
-
-    // console.log('onSlideCard(), members: ' + JSON.stringify(members));
   }
 
   _renderItem = ({ item }) => {
-    console.log('bill len: ' + bills.length);
-    console.log('item: ' + JSON.stringify(item));
-    //carousel.current.triggerRenderingHack();
-    // carousel.current.snapToItem(0);
+    //console.log('bill len: ' + bills.length);
+    //console.log('item: ' + JSON.stringify(item));
+
     if (bills.length) {
       const bill = item;
       let yourDue = data.yourDue[bill.name];
@@ -119,16 +122,26 @@ const Bills = ({ navigation }) => {
         bill: bill[bill.name],
         yourDue: yourDue
       }
-      // console.log("rendering carousel");
-      return (
-        <View style={styles.cardContainer}>
-          <Card payload={payload} />
-        </View>
-      );
+
+      if (isIos) {
+        return (
+          <View style={styles.cardContainer}
+            onStartShouldSetResponder={() => true} //this will make the card swipable on IOS
+          >
+            <Card payload={payload} />
+          </View>
+        );
+      } else {
+        return (
+          <View style={styles.cardContainer}>
+            <Card payload={payload} />
+          </View>
+        );
+      }
     } else
-      return <></>
+      return <View style={styles.cardContainer} />
   }
-  //onStartShouldSetResponder={() => true}
+
   return (
     <HomeIconFrame
       title='Bills'
@@ -136,10 +149,10 @@ const Bills = ({ navigation }) => {
       preTitle='Grouped payment'
       showPrimaryHolder={true}
     >
-      <View style={styles.container} >
-        <View>
+      <View style={styles.container} onStartShouldSetResponder={() => true}>
+        <View style={{ height: 220 }}>
           <Carousel
-            ref={carousel}
+            // ref={carousel}
             removeClippedSubviews={false} //without this, it won't display a singe card on IOS
             data={bills}
             style={{ width: width, maxHeight: 225 }}
@@ -148,11 +161,11 @@ const Bills = ({ navigation }) => {
             onSnapToItem={(index) => onSlideCard(index)}
             renderItem={_renderItem}
           />
+          <View style={styles.paginationContainer}>
+            {getPagination()}
+          </View>
         </View>
-        <View style={styles.paginationContainer}>
-          {getPagination()}
-        </View>
-        <View style={styles.peopleGroupContainer}>
+        <View style={styles.peopleGroupContainer} >
           <Text style={styles.peopleCaption}>People in the group</Text>
           <ScrollView
             horizontal
@@ -165,7 +178,6 @@ const Bills = ({ navigation }) => {
               </TouchableOpacity>
             </View>
             {members.map((member, key) => {
-              // console.log('key: ' + key);
               return (
                 <View style={styles.people} key={key}>
                   <ProfileImage image={key == 0 ? primaryImage : null} isPrimary={member[member.name].isPrimary} name={member.name} />
@@ -176,25 +188,33 @@ const Bills = ({ navigation }) => {
         </View>
         <View style={styles.activitiesContainer}>
           <Text style={styles.activityCaption}>Activities</Text>
-          <View style={styles.activities}>
-            <ScrollView style={styles.activitiesScrollView}>
-              <Activity
-                title='Dung'
-                type={Type.Paid}
-                message='Dung has paid the split amount'
-              />
-              <Activity
-                title='Everyone has paid'
-                type={Type.Generic}
-                message='All dues are collected. Please pay the bill now.'
-              />
-              <Activity
-                title='Notification'
-                type={Type.Notification}
-                message='A reminder was sent to everyone.'
-              />
-            </ScrollView>
-          </View>
+          <ScrollView scrollEnabled={true} contentContainerStyle={{ flexGrow: 1 }}>
+            <Activity
+              title='Dung'
+              type={Type.Paid}
+              message='Dung has paid the split amount'
+            />
+            <Activity
+              title='Everyone has paid'
+              type={Type.Generic}
+              message='All dues are collected. Please pay the bill now.'
+            />
+            <Activity
+              title='Notification'
+              type={Type.Notification}
+              message='A reminder was sent to everyone.'
+            />
+            <Activity
+              title='Alex'
+              type={Type.Paid}
+              message='Alex has paid the split amount'
+            />
+            <Activity
+              title='Notification'
+              type={Type.Notification}
+              message='A reminder was sent to everyone.'
+            />
+          </ScrollView>
         </View>
       </View>
     </HomeIconFrame>
@@ -204,19 +224,22 @@ const Bills = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //  backgroundColor: "gray"
+    //height: "85%"
+    //backgroundColor: "green"
   },
   paginationContainer: {
     height: "5%",
-    //backgroundColor: "gray",
+    //backgroundColor: "blue",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 10
+    marginBottom: "5%"
   },
   cardContainer: {
+    flex: 1,
+    //height: 184,
     // marginTop: -30,
     alignItems: "center",
-    marginBottom: 3,
+    marginBottom: 0,
     //backgroundColor: "gray"
   },
   peopleCaption: {
@@ -227,7 +250,7 @@ const styles = StyleSheet.create({
   peopleGroupContainer: {
     alignItems: "flex-start",
     marginLeft: 20,
-    marginBottom: 41
+    marginBottom: 20
     // backgroundColor: "gray"
   },
   peopleScrollView: {
@@ -257,7 +280,9 @@ const styles = StyleSheet.create({
   },
   activitiesContainer: {
     marginLeft: 20,
-    flex: 1
+    flex: 1,
+    zIndex: 1001
+    //height: "35%"
     //backgroundColor: "gray"
   },
   activities: {

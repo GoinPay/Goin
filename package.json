@@ -16,7 +16,7 @@
     "expo": "^35.0.1",
     "expo-cli": "^3.11.7",
     "expo-sms": "^8.0.0",
-    "firebase": "^7.7.0",
+    "firebase": "^7.14.1",
     "minipass": "^2.8.5",
     "moment": "^2.24.0",
     "react": "16.8.3",

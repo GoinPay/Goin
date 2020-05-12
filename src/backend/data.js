@@ -12,6 +12,7 @@ class Data {
   usersRef = null;
   billsRef = null;
   currentBillCode = "";
+  currentBillDesc = "";
   onDataChangedCallback = null;
   yourDue = {};
   newBill = {};
@@ -61,8 +62,12 @@ class Data {
       firebase.database().ref("users/").update(data);
     },
 
-    updateUserBillDue: (billCode, data) => {
+    updateUserBillByCode: (billCode, data) => {
       firebase.database().ref("users/" + This.userEmail + "/bills/" + billCode).update(data);
+    },
+
+    deleteUserBillByCode: (billCode) => {
+      firebase.database().ref("users/" + This.userEmail + "/bills/" + billCode).remove();
     },
 
     setChangedCallback: (callback) => {
@@ -116,6 +121,7 @@ class Data {
     getBillMembers: (billName) => {
       console.log('bill code Name: ' + billName);
       This.currentBillCode = billName;
+      This.currentBillDesc = This.allBills[billName].description;
       // console.log('allBills: ' + JSON.stringify(This.allBills));
       let userBills = [];
       if (This.allBills) {
