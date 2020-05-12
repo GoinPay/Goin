@@ -90,6 +90,8 @@ const Card = (props) => {
               selectTextOnFocus={true}
               onFocus={onFocusChange}
               onBlur={onBlurChange}
+              eturnKeyType="done"
+              onSubmitEditing={() => setEdit(false)}
             ></TextInput>
           </View>
         </View>
