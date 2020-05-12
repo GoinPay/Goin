@@ -112,12 +112,21 @@ const Bills = ({ navigation }) => {
   }
 
   _renderItem = ({ item }) => {
-    //console.log('bill len: ' + bills.length);
-    //console.log('item: ' + JSON.stringify(item));
+    console.log('bill len: ' + bills.length);
+    console.log('item: ' + JSON.stringify(item));
 
     if (bills.length) {
       const bill = item;
       let yourDue = data.yourDue[bill.name];
+      if (members.length) {
+        var dueNumber = Number(yourDue.replace(/[^0-9\.]+/g, ""));
+        // console.log("due number: " + dueNumber);
+        //console.log("members len: " + members.length);
+        yourDue = dueNumber / members.length;
+        // console.log("due numb: " + yourDue);
+        yourDue = "$" + yourDue.toString()
+        // console.log("computed due: " + yourDue);
+      }
       let payload = {
         bill: bill[bill.name],
         yourDue: yourDue
