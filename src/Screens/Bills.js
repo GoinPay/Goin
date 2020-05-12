@@ -112,8 +112,8 @@ const Bills = ({ navigation }) => {
   }
 
   _renderItem = ({ item }) => {
-    console.log('bill len: ' + bills.length);
-    console.log('item: ' + JSON.stringify(item));
+    //console.log('bill len: ' + bills.length);
+    //console.log('item: ' + JSON.stringify(item));
 
     if (bills.length) {
       const bill = item;
